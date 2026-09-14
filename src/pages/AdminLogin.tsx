@@ -58,7 +58,7 @@ export default function AdminLogin() {
       return;
     }
 
-    const { data: hasAdmin } = await (supabase as any).rpc("has_role", {
+    const { data: hasAdmin } = await (supabase as any).rpc("mkt_has_role", {
       _user_id: session.session.user.id,
       _role: "admin",
     });
@@ -69,7 +69,7 @@ export default function AdminLogin() {
     } else {
       // Verificar se tem perfil pendente
       const { data: profile } = await supabase
-        .from("profiles")
+        .from("mkt_profiles")
         .select("is_approved")
         .eq("user_id", session.session.user.id)
         .single();
@@ -79,7 +79,7 @@ export default function AdminLogin() {
         await signOut();
       } else if (!profile) {
         // Criar perfil se não existir
-        await supabase.from("profiles").insert({
+        await supabase.from("mkt_profiles").insert({
           user_id: session.session.user.id,
           full_name: session.session.user.user_metadata?.full_name || email,
           is_approved: false

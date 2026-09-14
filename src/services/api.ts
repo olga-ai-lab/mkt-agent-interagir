@@ -110,7 +110,7 @@ async function getLatestApprovalActionByPostId(postIds: string[]): Promise<Map<s
   if (uniquePostIds.length === 0) return new Map();
 
   const { data, error } = await supabase
-    .from('post_approvals')
+    .from('mkt_post_approvals')
     .select('post_id, action, created_at')
     .in('post_id', uniquePostIds)
     .order('created_at', { ascending: false });
@@ -135,7 +135,7 @@ async function getLatestRejectionReasonByPostId(postIds: string[]): Promise<Map<
   if (uniquePostIds.length === 0) return new Map();
 
   const { data, error } = await supabase
-    .from('rejection_reasons')
+    .from('mkt_rejection_reasons')
     .select('post_id, created_at')
     .in('post_id', uniquePostIds)
     .order('created_at', { ascending: false });
@@ -168,7 +168,7 @@ async function enrichPostsWithPautaTitle<T extends { pauta_id?: number | null }>
   }
 
   const { data: pautas, error } = await supabase
-    .from('pautas')
+    .from('mkt_pautas')
     .select('id, titulo')
     .in('id', pautaIds);
 
@@ -204,7 +204,7 @@ function mapSocialPostRow(post: any): SocialPost {
 // Workspaces
 export async function getWorkspaces(): Promise<Workspace[]> {
   const { data, error } = await supabase
-    .from('workspaces')
+    .from('mkt_workspaces')
     .select('*')
     .order('created_at', { ascending: false });
   
@@ -218,7 +218,7 @@ export async function getWorkspaces(): Promise<Workspace[]> {
 
 export async function getWorkspace(id: string): Promise<Workspace | null> {
   const { data, error } = await supabase
-    .from('workspaces')
+    .from('mkt_workspaces')
     .select('*')
     .eq('id', id)
     .single();
@@ -233,7 +233,7 @@ export async function getWorkspace(id: string): Promise<Workspace | null> {
 
 export async function updateWorkspace(id: string, workspaceData: Partial<Workspace>): Promise<Workspace | null> {
   const { data, error } = await supabase
-    .from('workspaces')
+    .from('mkt_workspaces')
     .update({
       name: workspaceData.name,
       logo_url: workspaceData.logo_url,
@@ -253,7 +253,7 @@ export async function updateWorkspace(id: string, workspaceData: Partial<Workspa
 // Dashboard Stats
 export async function getDashboardStats(workspaceId: string): Promise<DashboardStats> {
   const { data: posts, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .select('id, status, published_at')
     .eq('workspace_id', workspaceId);
   
@@ -294,7 +294,7 @@ export async function getDashboardStats(workspaceId: string): Promise<DashboardS
 // Posts
 export async function getPosts(workspaceId: string, filters?: PostFilters): Promise<SocialPost[]> {
   let query = supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .select('*')
     .eq('workspace_id', workspaceId)
     .order('created_at', { ascending: false });
@@ -351,7 +351,7 @@ export async function getPosts(workspaceId: string, filters?: PostFilters): Prom
 
 export async function getPost(id: string): Promise<SocialPost | null> {
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .select('*')
     .eq('id', id)
     .single();
@@ -380,7 +380,7 @@ export async function getPost(id: string): Promise<SocialPost | null> {
 
 export async function createPost(postData: Partial<SocialPost>): Promise<SocialPost> {
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .insert({
       workspace_id: postData.workspace_id || DEFAULT_WORKSPACE_ID,
       title: postData.title || 'Novo Post',
@@ -430,7 +430,7 @@ export async function updatePost(id: string, postData: Partial<SocialPost>): Pro
   }
 
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .update(payload)
     .eq('id', id)
     .select()
@@ -447,7 +447,7 @@ export async function updatePost(id: string, postData: Partial<SocialPost>): Pro
 export async function deletePost(id: string, reason?: string): Promise<boolean> {
   const { data: { user } } = await supabase.auth.getUser();
   const { error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .update({
       deleted_at: new Date().toISOString(),
       deleted_by: user?.id ?? null,
@@ -465,7 +465,7 @@ export async function deletePost(id: string, reason?: string): Promise<boolean> 
 
 export async function restorePost(id: string): Promise<boolean> {
   const { error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .update({ deleted_at: null, deleted_by: null, delete_reason: null } as any)
     .eq('id', id);
 
@@ -479,7 +479,7 @@ export async function restorePost(id: string): Promise<boolean> {
 
 export async function hardDeletePost(id: string): Promise<boolean> {
   const { error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .delete()
     .eq('id', id);
 
@@ -493,7 +493,7 @@ export async function hardDeletePost(id: string): Promise<boolean> {
 
 export async function getDeletedPosts(workspaceId: string): Promise<SocialPost[]> {
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .select('*')
     .eq('workspace_id', workspaceId)
     .not('deleted_at', 'is', null)
@@ -519,7 +519,7 @@ export async function sendToApproval(id: string, type: 'internal' | 'external'):
   
   // Get latest version number
   const { data: versions } = await supabase
-    .from('post_versions')
+    .from('mkt_post_versions')
     .select('version_number')
     .eq('post_id', id)
     .order('version_number', { ascending: false })
@@ -529,7 +529,7 @@ export async function sendToApproval(id: string, type: 'internal' | 'external'):
   
   // Create new version
   await supabase
-    .from('post_versions')
+    .from('mkt_post_versions')
     .insert({
       post_id: id,
       content: currentPost.content,
@@ -539,7 +539,7 @@ export async function sendToApproval(id: string, type: 'internal' | 'external'):
   
   // Update post status
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .update({ status: newStatus })
     .eq('id', id)
     .select()
@@ -556,7 +556,7 @@ export async function sendToApproval(id: string, type: 'internal' | 'external'):
 export async function approvePost(id: string, comment?: string): Promise<SocialPost | null> {
   // Create approval record
   await supabase
-    .from('post_approvals')
+    .from('mkt_post_approvals')
     .insert({
       post_id: id,
       action: 'approved' as const,
@@ -566,7 +566,7 @@ export async function approvePost(id: string, comment?: string): Promise<SocialP
   
   // Update post status
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .update({ status: 'APPROVED' as const })
     .eq('id', id)
     .select()
@@ -588,14 +588,14 @@ export async function requestChanges(
 ): Promise<SocialPost | null> {
   // Get post data for context
   const { data: postData } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .select('content, channels')
     .eq('id', id)
     .single();
 
   // Create rejection_reasons record for AI analysis
   await supabase
-    .from('rejection_reasons')
+    .from('mkt_rejection_reasons')
     .insert({
       post_id: id,
       workspace_id: workspaceId,
@@ -611,7 +611,7 @@ export async function requestChanges(
     : `Motivos: ${reasons.join(', ')}`;
     
   await supabase
-    .from('post_approvals')
+    .from('mkt_post_approvals')
     .insert({
       post_id: id,
       action: 'changes_requested' as const,
@@ -621,7 +621,7 @@ export async function requestChanges(
   
   // Add comment
   await supabase
-    .from('post_comments')
+    .from('mkt_post_comments')
     .insert({
       post_id: id,
       content: fullComment,
@@ -630,7 +630,7 @@ export async function requestChanges(
   
   // Update post status
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .update({ status: 'CHANGES_REQUESTED' as const })
     .eq('id', id)
     .select()
@@ -657,7 +657,7 @@ export async function requestChanges(
 
 export async function schedulePost(id: string, scheduledAt: string): Promise<SocialPost | null> {
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .update({ 
       status: 'SCHEDULED' as const,
       scheduled_at: scheduledAt 
@@ -677,7 +677,7 @@ export async function schedulePost(id: string, scheduledAt: string): Promise<Soc
 // Cancel schedule - returns post to DRAFT
 export async function cancelSchedule(id: string): Promise<SocialPost | null> {
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .update({ 
       status: 'DRAFT' as const,
       scheduled_at: null 
@@ -697,7 +697,7 @@ export async function cancelSchedule(id: string): Promise<SocialPost | null> {
 // Reschedule post - update scheduled_at
 export async function reschedulePost(id: string, newScheduledAt: string): Promise<SocialPost | null> {
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .update({ 
       scheduled_at: newScheduledAt,
       updated_at: new Date().toISOString()
@@ -717,7 +717,7 @@ export async function reschedulePost(id: string, newScheduledAt: string): Promis
 // Post Versions
 export async function getPostVersions(postId: string): Promise<PostVersion[]> {
   const { data, error } = await supabase
-    .from('post_versions')
+    .from('mkt_post_versions')
     .select('*')
     .eq('post_id', postId)
     .order('version_number', { ascending: false });
@@ -736,7 +736,7 @@ export async function getPostVersions(postId: string): Promise<PostVersion[]> {
 // Post Comments
 export async function getPostComments(postId: string): Promise<PostComment[]> {
   const { data, error } = await supabase
-    .from('post_comments')
+    .from('mkt_post_comments')
     .select('*')
     .eq('post_id', postId)
     .order('created_at', { ascending: true });
@@ -751,7 +751,7 @@ export async function getPostComments(postId: string): Promise<PostComment[]> {
 
 export async function addComment(postId: string, content: string, isInternal: boolean = true): Promise<PostComment> {
   const { data, error } = await supabase
-    .from('post_comments')
+    .from('mkt_post_comments')
     .insert({
       post_id: postId,
       content,
@@ -771,7 +771,7 @@ export async function addComment(postId: string, content: string, isInternal: bo
 // Post Approvals
 export async function getPostApprovals(postId: string): Promise<PostApproval[]> {
   const { data, error } = await supabase
-    .from('post_approvals')
+    .from('mkt_post_approvals')
     .select('*')
     .eq('post_id', postId)
     .order('created_at', { ascending: false });
@@ -789,7 +789,7 @@ export async function getPostApprovals(postId: string): Promise<PostApproval[]> 
 
 // External Approval (public access via token) - uses database function
 export async function getPostByToken(token: string): Promise<SocialPost | null> {
-  const { data, error } = await (supabase as any).rpc('get_post_by_token', { _token: token });
+  const { data, error } = await (supabase as any).rpc('mkt_get_post_by_token', { _token: token });
 
   if (error || !data || data.length === 0) {
     console.error('Error fetching post by token:', error);
@@ -826,7 +826,7 @@ export async function submitExternalApproval(
   approverEmail?: string,
   scheduledAt?: string
 ): Promise<boolean> {
-  const { data, error } = await (supabase as any).rpc('submit_external_approval', {
+  const { data, error } = await (supabase as any).rpc('mkt_submit_external_approval', {
     _token: token,
     _action: action,
     _comment: comment || null,
@@ -850,7 +850,7 @@ export async function getCalendarPosts(
   endDate: string
 ): Promise<SocialPost[]> {
   const { data, error } = await supabase
-    .from('social_posts')
+    .from('mkt_social_posts')
     .select('*')
     .eq('workspace_id', workspaceId)
     .or(`scheduled_at.gte.${startDate},published_at.gte.${startDate}`)
@@ -879,7 +879,7 @@ export async function getCalendarPosts(
 // Approvers
 export async function getApprovers(workspaceId: string): Promise<Approver[]> {
   const { data, error } = await supabase
-    .from('approvers')
+    .from('mkt_approvers')
     .select('*')
     .eq('workspace_id', workspaceId)
     .order('created_at', { ascending: false });
@@ -897,7 +897,7 @@ export async function getApprovers(workspaceId: string): Promise<Approver[]> {
 
 export async function addApprover(approverData: Partial<Approver>): Promise<Approver> {
   const { data, error } = await supabase
-    .from('approvers')
+    .from('mkt_approvers')
     .insert({
       workspace_id: approverData.workspace_id || DEFAULT_WORKSPACE_ID,
       email: approverData.email || '',
@@ -921,7 +921,7 @@ export async function addApprover(approverData: Partial<Approver>): Promise<Appr
 
 export async function updateApprover(id: string, approverData: Partial<Approver>): Promise<Approver | null> {
   const { data, error } = await supabase
-    .from('approvers')
+    .from('mkt_approvers')
     .update(approverData)
     .eq('id', id)
     .select()
@@ -940,7 +940,7 @@ export async function updateApprover(id: string, approverData: Partial<Approver>
 
 export async function deleteApprover(id: string): Promise<boolean> {
   const { error } = await supabase
-    .from('approvers')
+    .from('mkt_approvers')
     .delete()
     .eq('id', id);
   
@@ -955,7 +955,7 @@ export async function deleteApprover(id: string): Promise<boolean> {
 // Integrations
 export async function getIntegrations(workspaceId: string): Promise<Integration[]> {
   const { data, error } = await supabase
-    .from('integrations')
+    .from('mkt_integrations')
     .select('*')
     .eq('workspace_id', workspaceId)
     .order('created_at', { ascending: false });
@@ -982,7 +982,7 @@ export async function updateIntegration(id: string, integrationData: Partial<Int
   if (integrationData.type !== undefined) updateData.type = integrationData.type;
   
   const { data, error } = await supabase
-    .from('integrations')
+    .from('mkt_integrations')
     .update(updateData)
     .eq('id', id)
     .select()
@@ -1002,7 +1002,7 @@ export async function updateIntegration(id: string, integrationData: Partial<Int
 
 export async function createIntegration(integrationData: Partial<Integration>): Promise<Integration> {
   const { data, error } = await supabase
-    .from('integrations')
+    .from('mkt_integrations')
     .insert([{
       workspace_id: integrationData.workspace_id || DEFAULT_WORKSPACE_ID,
       type: integrationData.type as 'instagram_api' | 'n8n' | 'slack' | 'whatsapp',
@@ -1026,7 +1026,7 @@ export async function createIntegration(integrationData: Partial<Integration>): 
 
 export async function deleteIntegration(id: string): Promise<boolean> {
   const { error } = await supabase
-    .from('integrations')
+    .from('mkt_integrations')
     .delete()
     .eq('id', id);
   

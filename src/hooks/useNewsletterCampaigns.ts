@@ -24,7 +24,7 @@ export function useNewsletterCampaigns(workspaceId: string = DEFAULT_WORKSPACE_I
     queryKey: ["newsletter-campaigns", workspaceId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("newsletter_campaigns")
+        .from("mkt_newsletter_campaigns")
         .select("*")
         .eq("workspace_id", workspaceId)
         .order("created_at", { ascending: false });
@@ -41,7 +41,7 @@ export function useCampaign(id: string | null, workspaceId: string = DEFAULT_WOR
     queryFn: async () => {
       if (!id) return null;
       const { data, error } = await supabase
-        .from("newsletter_campaigns")
+        .from("mkt_newsletter_campaigns")
         .select("*")
         .eq("id", id)
         .eq("workspace_id", workspaceId)
@@ -65,7 +65,7 @@ export function useCreateCampaign() {
       workspace_id?: string;
     }) => {
       const { data, error } = await supabase
-        .from("newsletter_campaigns")
+        .from("mkt_newsletter_campaigns")
         .insert({
           workspace_id: campaign.workspace_id || DEFAULT_WORKSPACE_ID,
           subject: campaign.subject,
@@ -99,7 +99,7 @@ export function useUpdateCampaign() {
       workspaceId?: string;
     }) => {
       const { error } = await supabase
-        .from("newsletter_campaigns")
+        .from("mkt_newsletter_campaigns")
         .update(data)
         .eq("id", id)
         .eq("workspace_id", workspaceId || DEFAULT_WORKSPACE_ID);
@@ -118,7 +118,7 @@ export function useDeleteCampaign() {
   return useMutation({
     mutationFn: async ({ id, workspaceId }: { id: string; workspaceId?: string }) => {
       const { error } = await supabase
-        .from("newsletter_campaigns")
+        .from("mkt_newsletter_campaigns")
         .delete()
         .eq("id", id)
         .eq("workspace_id", workspaceId || DEFAULT_WORKSPACE_ID);

@@ -75,9 +75,9 @@ export default function MarketingDashboard() {
           { data: viewsData },
           { count: subscribersCount },
         ] = await Promise.all([
-          supabase.from("articles").select("*", { count: "exact", head: true }).eq("status", "published"),
-          supabase.from("articles").select("view_count").eq("status", "published"),
-          supabase.from("newsletter_subscribers").select("*", { count: "exact", head: true }).eq("is_active", true),
+          supabase.from("mkt_articles").select("*", { count: "exact", head: true }).eq("status", "published"),
+          supabase.from("mkt_articles").select("view_count").eq("status", "published"),
+          supabase.from("mkt_newsletter_subscribers").select("*", { count: "exact", head: true }).eq("is_active", true),
         ]);
 
         const totalViews = viewsData?.reduce((acc, a) => acc + (a.view_count || 0), 0) || 0;
@@ -89,7 +89,7 @@ export default function MarketingDashboard() {
 
         // Fetch recent activities
         const { data: activitiesData } = await supabase
-          .from("activity_log")
+          .from("mkt_activity_log")
           .select("*")
           .eq("workspace_id", currentWorkspace.id)
           .order("created_at", { ascending: false })

@@ -17,7 +17,7 @@ export function BlogCTA() {
 
     setIsLoading(true);
     try {
-      const { error } = await supabase.from("newsletter_subscribers").insert({
+      const { error } = await supabase.from("mkt_newsletter_subscribers").insert({
         email,
         source: "blog_cta",
       });

@@ -42,7 +42,7 @@ export function useGalleryMedia(
     queryFn: async () => {
       // 1. Fetch media_urls from social_posts
       const { data: posts, error: postsError } = await supabase
-        .from("social_posts")
+        .from("mkt_social_posts")
         .select("id, media_urls, company, created_at")
         .not("media_urls", "is", null);
 

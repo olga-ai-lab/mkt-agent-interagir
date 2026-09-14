@@ -198,7 +198,7 @@ export function MediaUploader({
     setUpdatingThumbnail(true);
     try {
       const { error } = await supabase
-        .from("social_posts")
+        .from("mkt_social_posts")
         .update({ thumbnail_url: url, og_image_url: url })
         .eq("id", postId);
       if (error) throw error;

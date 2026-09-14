@@ -55,7 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     
     // Criar perfil imediatamente após signup bem-sucedido
     if (!error && data.user) {
-      await supabase.from("profiles").insert({
+      await supabase.from("mkt_profiles").insert({
         user_id: data.user.id,
         full_name: fullName,
         is_approved: false

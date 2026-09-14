@@ -44,7 +44,7 @@ export function usePautas() {
     if (!options?.silent) setLoading(true);
     setError(null);
     const { data, error: fetchError } = await supabase
-      .from("pautas")
+      .from("mkt_pautas")
       .select("*")
       .order("created_at", { ascending: false });
 
@@ -84,7 +84,7 @@ export function usePautas() {
 
   const createPauta = async (input: CreatePautaInput) => {
     const { data, error: createError } = await supabase
-      .from("pautas")
+      .from("mkt_pautas")
       .insert({
         titulo: input.titulo,
         briefing: input.briefing,
@@ -115,7 +115,7 @@ export function usePautas() {
     marca?: "livo" | "livonius";
   }) => {
     const { data, error: updateError } = await supabase
-      .from("pautas")
+      .from("mkt_pautas")
       .update({
         titulo: input.titulo,
         briefing: input.briefing,
@@ -140,7 +140,7 @@ export function usePautas() {
 
   const deletePauta = async (id: number) => {
     const { error: deleteError } = await supabase
-      .from("pautas")
+      .from("mkt_pautas")
       .delete()
       .eq("id", id)
       .in("status", EDITABLE_STATUSES);
@@ -162,7 +162,7 @@ export function usePautas() {
     }));
 
     const { data, error: importError } = await supabase
-      .from("pautas")
+      .from("mkt_pautas")
       .insert(insertData)
       .select();
 

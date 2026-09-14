@@ -22,7 +22,7 @@ export function useProfile() {
       if (!user) return null;
       
       const { data, error } = await supabase
-        .from("profiles")
+        .from("mkt_profiles")
         .select("*")
         .eq("user_id", user.id)
         .maybeSingle();

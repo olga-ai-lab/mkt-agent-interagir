@@ -47,7 +47,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
 
       // Search articles
       const { data: articlesData } = await supabase
-        .from("articles")
+        .from("mkt_articles")
         .select("id, title, slug, status")
         .or(`title.ilike.%${searchQuery}%,content.ilike.%${searchQuery}%`)
         .limit(5);

@@ -7,7 +7,7 @@ export function usePostVariants(postId: string) {
     queryKey: ["post-variants", postId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("post_variants")
+        .from("mkt_post_variants")
         .select("*")
         .eq("post_id", postId)
         .order("variant_name");
@@ -24,7 +24,7 @@ export function useABTestResults(postId: string) {
     queryKey: ["ab-test-results", postId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("ab_test_results")
+        .from("mkt_ab_test_results")
         .select("*")
         .eq("post_id", postId)
         .order("recorded_at", { ascending: false });
@@ -42,7 +42,7 @@ export function useCreateVariant() {
   return useMutation({
     mutationFn: async (variant: Omit<PostVariant, "id" | "created_at" | "updated_at">) => {
       const { data, error } = await supabase
-        .from("post_variants")
+        .from("mkt_post_variants")
         .insert({
           post_id: variant.post_id,
           variant_name: variant.variant_name,
@@ -69,7 +69,7 @@ export function useUpdateVariant() {
   return useMutation({
     mutationFn: async ({ id, postId, data }: { id: string; postId: string; data: Partial<PostVariant> }) => {
       const { error } = await supabase
-        .from("post_variants")
+        .from("mkt_post_variants")
         .update(data)
         .eq("id", id);
 
@@ -88,7 +88,7 @@ export function useDeleteVariant() {
   return useMutation({
     mutationFn: async ({ id, postId }: { id: string; postId: string }) => {
       const { error } = await supabase
-        .from("post_variants")
+        .from("mkt_post_variants")
         .delete()
         .eq("id", id);
 
@@ -108,7 +108,7 @@ export function useSaveVariants() {
     mutationFn: async ({ postId, variants }: { postId: string; variants: PostVariant[] }) => {
       // First, delete existing variants for this post
       await supabase
-        .from("post_variants")
+        .from("mkt_post_variants")
         .delete()
         .eq("post_id", postId);
 
@@ -124,7 +124,7 @@ export function useSaveVariants() {
         }));
 
         const { error } = await supabase
-          .from("post_variants")
+          .from("mkt_post_variants")
           .insert(variantsToInsert);
 
         if (error) throw error;
@@ -132,7 +132,7 @@ export function useSaveVariants() {
 
       // Update post has_ab_test flag
       await supabase
-        .from("social_posts")
+        .from("mkt_social_posts")
         .update({ has_ab_test: variants.length > 0 })
         .eq("id", postId);
 

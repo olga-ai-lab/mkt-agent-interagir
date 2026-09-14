@@ -16,7 +16,7 @@ export function usePostInsights(workspaceId: string = DEFAULT_WORKSPACE_ID) {
     queryKey: ['ai-post-insights', workspaceId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('ai_post_insights')
+        .from('mkt_ai_post_insights')
         .select(`
           *,
           social_posts!inner (
@@ -45,7 +45,7 @@ export function useTrendPlaybook(workspaceId: string = DEFAULT_WORKSPACE_ID) {
     queryKey: ['ai-trend-playbook', workspaceId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('ai_trend_playbook')
+        .from('mkt_ai_trend_playbook')
         .select('*')
         .eq('workspace_id', workspaceId)
         .maybeSingle();
@@ -63,7 +63,7 @@ export function useUpdatePlaybook() {
   return useMutation({
     mutationFn: async ({ workspaceId, updates }: { workspaceId: string; updates: Partial<AITrendPlaybook> }) => {
       const { data, error } = await supabase
-        .from('ai_trend_playbook')
+        .from('mkt_ai_trend_playbook')
         .upsert({
           workspace_id: workspaceId,
           prompt_master: updates.prompt_master,
@@ -88,7 +88,7 @@ export function useContentSuggestions(workspaceId: string = DEFAULT_WORKSPACE_ID
     queryKey: ['ai-content-suggestions', workspaceId, status],
     queryFn: async () => {
       let query = supabase
-        .from('ai_content_suggestions')
+        .from('mkt_ai_content_suggestions')
         .select('*')
         .eq('workspace_id', workspaceId)
         .order('confidence', { ascending: false });
@@ -111,7 +111,7 @@ export function useUpdateSuggestion() {
   return useMutation({
     mutationFn: async ({ id, status, created_post_id }: { id: string; status: string; created_post_id?: string }) => {
       const { data, error } = await supabase
-        .from('ai_content_suggestions')
+        .from('mkt_ai_content_suggestions')
         .update({ status, created_post_id })
         .eq('id', id)
         .select()
@@ -132,7 +132,7 @@ export function usePromptAdjustments(workspaceId: string = DEFAULT_WORKSPACE_ID)
     queryKey: ['ai-prompt-adjustments', workspaceId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('ai_prompt_adjustments')
+        .from('mkt_ai_prompt_adjustments')
         .select('*')
         .eq('workspace_id', workspaceId)
         .maybeSingle();
@@ -151,7 +151,7 @@ export function useRejectionReasons(postId?: string) {
       if (!postId) return [];
 
       const { data, error } = await supabase
-        .from('rejection_reasons')
+        .from('mkt_rejection_reasons')
         .select('*')
         .eq('post_id', postId)
         .order('created_at', { ascending: false });
@@ -172,7 +172,7 @@ export function usePostsWithAnalytics(workspaceId: string = DEFAULT_WORKSPACE_ID
       startDate.setDate(startDate.getDate() - days);
 
       const { data: posts, error: postsError } = await supabase
-        .from('social_posts')
+        .from('mkt_social_posts')
         .select('*')
         .eq('workspace_id', workspaceId)
         .eq('status', 'PUBLISHED')
@@ -186,7 +186,7 @@ export function usePostsWithAnalytics(workspaceId: string = DEFAULT_WORKSPACE_ID
       if (postIds.length === 0) return [];
 
       const { data: analytics, error: analyticsError } = await supabase
-        .from('post_analytics')
+        .from('mkt_post_analytics')
         .select('*')
         .in('post_id', postIds);
 
@@ -194,7 +194,7 @@ export function usePostsWithAnalytics(workspaceId: string = DEFAULT_WORKSPACE_ID
 
       // Fetch insights
       const { data: insights, error: insightsError } = await supabase
-        .from('ai_post_insights')
+        .from('mkt_ai_post_insights')
         .select('*')
         .in('post_id', postIds);
 

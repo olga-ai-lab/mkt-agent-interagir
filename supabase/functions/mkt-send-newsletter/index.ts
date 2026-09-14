@@ -92,7 +92,7 @@ serve(async (req: Request) => {
 
     // ── REAL SEND: fetch active subscribers ──
     let query = supabase
-      .from("newsletter_subscribers")
+      .from("mkt_newsletter_subscribers")
       .select("id, email, name")
       .eq("is_active", true);
 
@@ -110,7 +110,7 @@ serve(async (req: Request) => {
 
     if (recipients.length === 0) {
       await supabase
-        .from("newsletter_campaigns")
+        .from("mkt_newsletter_campaigns")
         .update({ status: "failed", sent_at: new Date().toISOString(), recipient_count: 0, sent_count: 0, failed_count: 0 })
         .eq("id", campaign_id);
 
@@ -121,7 +121,7 @@ serve(async (req: Request) => {
     }
 
     await supabase
-      .from("newsletter_campaigns")
+      .from("mkt_newsletter_campaigns")
       .update({ status: "sending", recipient_count: recipients.length })
       .eq("id", campaign_id);
 
@@ -151,7 +151,7 @@ serve(async (req: Request) => {
     const finalStatus = failedCount === 0 ? "sent" : sentCount === 0 ? "failed" : "sent_with_errors";
 
     await supabase
-      .from("newsletter_campaigns")
+      .from("mkt_newsletter_campaigns")
       .update({ status: finalStatus, sent_at: new Date().toISOString(), sent_count: sentCount, failed_count: failedCount })
       .eq("id", campaign_id);
 

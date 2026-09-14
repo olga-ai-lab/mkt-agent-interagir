@@ -14,7 +14,7 @@ export function useSocialConnections(workspaceId: string | undefined) {
 
     try {
       const { data, error } = await supabase
-        .from('social_connections')
+        .from('mkt_social_connections')
         .select('*')
         .eq('workspace_id', workspaceId)
         .order('created_at', { ascending: false });
@@ -112,7 +112,7 @@ export function useSocialConnections(workspaceId: string | undefined) {
   const disconnectProvider = async (connectionId: string) => {
     try {
       const { error } = await supabase
-        .from('social_connections')
+        .from('mkt_social_connections')
         .delete()
         .eq('id', connectionId);
 

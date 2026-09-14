@@ -55,7 +55,7 @@ export function GenerationStatusBanner({ onDone }: { onDone?: () => void }) {
 
     const poll = async () => {
       const { data, error } = await supabase
-        .from("post_generation_status")
+        .from("mkt_post_generation_status")
         .select("status, error_message")
         .eq("generation_id", generationId)
         .maybeSingle();

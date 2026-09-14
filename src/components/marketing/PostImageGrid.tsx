@@ -33,7 +33,7 @@ export function PostImageGrid({
     setUpdating(true);
     try {
       const { error } = await supabase
-        .from("social_posts")
+        .from("mkt_social_posts")
         .update({ thumbnail_url: url, og_image_url: url })
         .eq("id", postId);
 

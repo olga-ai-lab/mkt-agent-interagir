@@ -38,7 +38,7 @@ export function useWorkspaceEmailSettings(workspaceId: string | undefined) {
     queryFn: async (): Promise<WorkspaceEmailSettings> => {
       // email_settings is added via migration; cast to bypass stale generated types
       const { data, error } = await (supabase as any)
-        .from("workspaces")
+        .from("mkt_workspaces")
         .select("email_settings")
         .eq("id", workspaceId!)
         .single();
@@ -58,7 +58,7 @@ export function useUpdateWorkspaceEmailSettings() {
     mutationFn: async ({ workspaceId, settings }: { workspaceId: string; settings: WorkspaceEmailSettings }) => {
       // email_settings is added via migration; cast to bypass stale generated types
       const { error } = await (supabase as any)
-        .from("workspaces")
+        .from("mkt_workspaces")
         .update({ email_settings: settings })
         .eq("id", workspaceId);
 

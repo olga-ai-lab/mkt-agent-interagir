@@ -36,7 +36,7 @@ export function RecommendationsWidget({ workspaceId }: RecommendationsWidgetProp
       try {
         // Fetch playbook data
         const { data: playbook } = await supabase
-          .from('ai_trend_playbook')
+          .from('mkt_ai_trend_playbook')
           .select('*')
           .eq('workspace_id', workspaceId)
           .maybeSingle();
@@ -46,7 +46,7 @@ export function RecommendationsWidget({ workspaceId }: RecommendationsWidgetProp
         thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
         const { data: posts } = await supabase
-          .from('social_posts')
+          .from('mkt_social_posts')
           .select(`
             id,
             status,

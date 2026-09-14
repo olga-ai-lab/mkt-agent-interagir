@@ -100,7 +100,7 @@ export function FileToPostUploader({ onContentExtracted, onProcessingStarted, di
     setProcessing(true);
     try {
       const generationId = crypto.randomUUID();
-      const { error: statusInsertError } = await supabase.from("post_generation_status").insert({
+      const { error: statusInsertError } = await supabase.from("mkt_post_generation_status").insert({
         generation_id: generationId,
         workspace_id: currentWorkspace.id,
         status: "pending",
@@ -147,7 +147,7 @@ export function FileToPostUploader({ onContentExtracted, onProcessingStarted, di
       if (triggerError) {
         console.error("mkt-trigger-file-to-post error:", triggerError);
         await supabase
-          .from("post_generation_status")
+          .from("mkt_post_generation_status")
           .update({ status: "error", error_message: triggerError.message })
           .eq("generation_id", generationId);
         toast.error("Erro ao disparar processamento do arquivo");

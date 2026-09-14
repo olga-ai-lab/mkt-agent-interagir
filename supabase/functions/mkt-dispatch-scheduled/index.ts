@@ -18,7 +18,7 @@ serve(async (req: Request) => {
   try {
     // Find campaigns that are scheduled and past their scheduled_at time
     const { data: campaigns, error } = await supabase
-      .from("newsletter_campaigns")
+      .from("mkt_newsletter_campaigns")
       .select("id, subject, content, segments")
       .eq("status", "scheduled")
       .lte("scheduled_at", new Date().toISOString());
@@ -40,7 +40,7 @@ serve(async (req: Request) => {
     for (const campaign of campaigns) {
       // Mark as sending immediately to prevent double-dispatch on next cron tick
       await supabase
-        .from("newsletter_campaigns")
+        .from("mkt_newsletter_campaigns")
         .update({ status: "sending" })
         .eq("id", campaign.id)
         .eq("status", "scheduled"); // guard against race condition
@@ -70,7 +70,7 @@ serve(async (req: Request) => {
         console.error(`mkt-dispatch-scheduled: falha ao chamar mkt-send-newsletter para ${campaign.id}:`, msg);
         // Revert status so it can be retried next tick
         await supabase
-          .from("newsletter_campaigns")
+          .from("mkt_newsletter_campaigns")
           .update({ status: "scheduled" })
           .eq("id", campaign.id);
         results.push({ id: campaign.id, success: false, error: msg });

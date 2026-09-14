@@ -7,7 +7,7 @@ export function useNewsletterSegments() {
     queryKey: ["newsletter-segments"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("newsletter_segments")
+        .from("mkt_newsletter_segments")
         .select("*")
         .order("name");
 
@@ -23,7 +23,7 @@ export function useCreateSegment() {
   return useMutation({
     mutationFn: async (segment: Omit<NewsletterSegment, "id" | "created_at" | "updated_at" | "subscriber_count">) => {
       const { data, error } = await supabase
-        .from("newsletter_segments")
+        .from("mkt_newsletter_segments")
         .insert(segment)
         .select()
         .single();
@@ -43,7 +43,7 @@ export function useUpdateSegment() {
   return useMutation({
     mutationFn: async ({ id, data }: { id: string; data: Partial<NewsletterSegment> }) => {
       const { error } = await supabase
-        .from("newsletter_segments")
+        .from("mkt_newsletter_segments")
         .update(data)
         .eq("id", id);
 
@@ -61,7 +61,7 @@ export function useDeleteSegment() {
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from("newsletter_segments")
+        .from("mkt_newsletter_segments")
         .delete()
         .eq("id", id);
 
@@ -79,7 +79,7 @@ export function useUpdateSubscriberSegments() {
   return useMutation({
     mutationFn: async ({ subscriberId, segments }: { subscriberId: string; segments: string[] }) => {
       const { error } = await supabase
-        .from("newsletter_subscribers")
+        .from("mkt_newsletter_subscribers")
         .update({ segments })
         .eq("id", subscriberId);
 

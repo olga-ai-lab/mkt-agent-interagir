@@ -18,7 +18,7 @@ export function useUpdateProfile() {
       if (!user) throw new Error("User not authenticated");
 
       const { error } = await supabase
-        .from("profiles")
+        .from("mkt_profiles")
         .update({
           ...data,
           updated_at: new Date().toISOString(),

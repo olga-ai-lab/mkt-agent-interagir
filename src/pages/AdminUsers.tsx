@@ -71,7 +71,7 @@ export default function AdminUsers() {
     queryKey: ["admin-profiles"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
+        .from("mkt_profiles")
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
@@ -86,7 +86,7 @@ export default function AdminUsers() {
     enabled: approvedUserIds.length > 0,
     queryFn: async () => {
       const { data, error } = await (supabase as any)
-        .from("user_roles")
+        .from("mkt_user_roles")
         .select("user_id, role")
         .in("user_id", approvedUserIds);
       if (error) throw error;
@@ -102,7 +102,7 @@ export default function AdminUsers() {
   const approveMutation = useMutation({
     mutationFn: async ({ profileId, userId }: { profileId: string; userId: string }) => {
       const { error: profileError } = await supabase
-        .from("profiles")
+        .from("mkt_profiles")
         .update({
           is_approved: true,
           approved_by: user?.id,
@@ -112,7 +112,7 @@ export default function AdminUsers() {
       if (profileError) throw profileError;
 
       const { error: roleError } = await (supabase as any)
-        .from("user_roles")
+        .from("mkt_user_roles")
         .insert({ user_id: userId, role: "admin" });
       if (roleError && !roleError.message.includes("duplicate")) throw roleError;
     },
@@ -129,7 +129,7 @@ export default function AdminUsers() {
       const { error } = await supabase.auth.admin.deleteUser(userId);
       if (error) {
         const { error: profileError } = await supabase
-          .from("profiles")
+          .from("mkt_profiles")
           .delete()
           .eq("user_id", userId);
         if (profileError) throw profileError;
@@ -145,14 +145,14 @@ export default function AdminUsers() {
   const revokeMutation = useMutation({
     mutationFn: async ({ profileId, userId }: { profileId: string; userId: string }) => {
       const { error: roleError } = await (supabase as any)
-        .from("user_roles")
+        .from("mkt_user_roles")
         .delete()
         .eq("user_id", userId)
         .eq("role", "admin");
       if (roleError) throw roleError;
 
       const { error: profileError } = await supabase
-        .from("profiles")
+        .from("mkt_profiles")
         .update({ is_approved: false, approved_by: null, approved_at: null })
         .eq("id", profileId);
       if (profileError) throw profileError;

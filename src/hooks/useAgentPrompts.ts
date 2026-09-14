@@ -252,7 +252,7 @@ export function useAgentPrompts(workspaceId: string = DEFAULT_WORKSPACE_ID) {
     queryKey: ['ai-agent-prompts', workspaceId],
     queryFn: async () => {
       const { data, error } = await (supabase as any)
-        .from('ai_agent_prompts')
+        .from('mkt_ai_agent_prompts')
         .select('*')
         .eq('workspace_id', workspaceId)
         .order('agent_type');
@@ -287,7 +287,7 @@ export function useUpdateAgentPrompt() {
       if (is_active !== undefined) updates.is_active = is_active;
 
       const { data, error } = await (supabase as any)
-        .from('ai_agent_prompts')
+        .from('mkt_ai_agent_prompts')
         .update(updates)
         .eq('id', id)
         .select()
@@ -318,7 +318,7 @@ export function useCreateAgentPrompt() {
       model_config?: Json;
     }) => {
       const { data, error } = await (supabase as any)
-        .from('ai_agent_prompts')
+        .from('mkt_ai_agent_prompts')
         .insert([{
           workspace_id,
           agent_type,
@@ -363,7 +363,7 @@ export function useSeedAgentPrompts() {
       );
 
       const { data, error } = await (supabase as any)
-        .from('ai_agent_prompts')
+        .from('mkt_ai_agent_prompts')
         .insert(promptsToInsert)
         .select();
 
@@ -382,7 +382,7 @@ export function usePromptVersions(promptId: string) {
     queryKey: ['ai-agent-prompt-versions', promptId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('ai_agent_prompt_versions')
+        .from('mkt_ai_agent_prompt_versions')
         .select('*')
         .eq('prompt_id', promptId)
         .order('version_number', { ascending: false })
@@ -403,7 +403,7 @@ export function useRestorePromptVersion() {
     mutationFn: async ({ promptId, versionId }: { promptId: string; versionId: string }) => {
       // Fetch the version to restore
       const { data: version, error: versionError } = await supabase
-        .from('ai_agent_prompt_versions')
+        .from('mkt_ai_agent_prompt_versions')
         .select('*')
         .eq('id', versionId)
         .single();
@@ -412,7 +412,7 @@ export function useRestorePromptVersion() {
 
       // Update the current prompt with the old version's content
       const { data, error } = await (supabase as any)
-        .from('ai_agent_prompts')
+        .from('mkt_ai_agent_prompts')
         .update({
           system_prompt: version.system_prompt,
           model_config: version.model_config,

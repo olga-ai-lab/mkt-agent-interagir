@@ -19,7 +19,7 @@ export function useEmailProfiles(workspaceId?: string) {
     enabled: !!workspaceId,
     queryFn: async (): Promise<EmailProfile[]> => {
       const { data, error } = await (supabase as any)
-        .from("email_profiles")
+        .from("mkt_email_profiles")
         .select("*")
         .eq("workspace_id", workspaceId)
         .order("created_at", { ascending: true });
@@ -44,7 +44,7 @@ export function useCreateEmailProfile() {
       settings: EmailGenerationSettings;
     }): Promise<EmailProfile> => {
       const { data, error } = await (supabase as any)
-        .from("email_profiles")
+        .from("mkt_email_profiles")
         .insert({ workspace_id: workspaceId, name, settings })
         .select()
         .single();
@@ -72,7 +72,7 @@ export function useUpdateEmailProfile() {
       settings: EmailGenerationSettings;
     }): Promise<EmailProfile> => {
       const { data, error } = await (supabase as any)
-        .from("email_profiles")
+        .from("mkt_email_profiles")
         .update({ name, settings })
         .eq("id", id)
         .select()
@@ -97,7 +97,7 @@ export function useDeleteEmailProfile() {
       workspaceId: string;
     }) => {
       const { error } = await (supabase as any)
-        .from("email_profiles")
+        .from("mkt_email_profiles")
         .delete()
         .eq("id", id);
       if (error) throw error;

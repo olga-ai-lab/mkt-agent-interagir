@@ -19,7 +19,7 @@ export function useUserRole() {
     let cancelled = false;
 
     const checkRole = async () => {
-      const { data, error } = await (supabase as any).rpc("has_role", {
+      const { data, error } = await (supabase as any).rpc("mkt_has_role", {
         _user_id: user.id,
         _role: "admin",
       });

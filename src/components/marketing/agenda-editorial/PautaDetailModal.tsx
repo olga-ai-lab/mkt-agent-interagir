@@ -72,7 +72,7 @@ export function PautaDetailModal({ pauta, isOpen, onClose, onSave, onGenerateCli
       if (!pauta || pauta.status !== "gerado") return;
 
       const { data, error } = await supabase
-        .from("social_posts")
+        .from("mkt_social_posts")
         .select("id")
         .eq("pauta_id", pauta.id)
         .order("created_at", { ascending: false })

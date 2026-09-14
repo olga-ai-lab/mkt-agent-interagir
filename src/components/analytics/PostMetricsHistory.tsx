@@ -41,7 +41,7 @@ export function PostMetricsHistory({ open, onOpenChange, postId, postTitle }: Po
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("post_analytics")
+        .from("mkt_post_analytics")
         .select("recorded_date, impressions, reach, likes, comments, shares, saves, plays, engagements")
         .eq("post_id", postId)
         .order("recorded_date", { ascending: true });

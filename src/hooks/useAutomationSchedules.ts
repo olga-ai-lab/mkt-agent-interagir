@@ -27,7 +27,7 @@ export function useAutomationSchedules() {
     setLoading(true);
     try {
       const { data, error } = await supabase
-        .from("automation_schedules")
+        .from("mkt_automation_schedules")
         .select("*")
         .order("created_at", { ascending: true });
       if (error) throw error;
@@ -46,7 +46,7 @@ export function useAutomationSchedules() {
 
   const updateSchedule = async (workflowName: string, updates: Partial<Pick<AutomationSchedule, "interval_value" | "interval_unit" | "is_active">>) => {
     const { error } = await supabase
-      .from("automation_schedules")
+      .from("mkt_automation_schedules")
       .update(updates)
       .eq("workflow_name", workflowName);
     if (error) {

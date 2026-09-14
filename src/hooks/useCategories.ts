@@ -14,7 +14,7 @@ export function useCategories() {
     queryKey: ["categories"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("categories")
+        .from("mkt_categories")
         .select("*")
         .order("name");
       
@@ -30,7 +30,7 @@ export function useCreateCategory() {
   return useMutation({
     mutationFn: async (category: { name: string; slug: string; description?: string }) => {
       const { data, error } = await supabase
-        .from("categories")
+        .from("mkt_categories")
         .insert([category])
         .select()
         .single();
@@ -50,7 +50,7 @@ export function useUpdateCategory() {
   return useMutation({
     mutationFn: async ({ id, ...category }: Partial<Category> & { id: string }) => {
       const { data, error } = await supabase
-        .from("categories")
+        .from("mkt_categories")
         .update(category)
         .eq("id", id)
         .select()
@@ -71,7 +71,7 @@ export function useDeleteCategory() {
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from("categories")
+        .from("mkt_categories")
         .delete()
         .eq("id", id);
       

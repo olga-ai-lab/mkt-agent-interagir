@@ -40,7 +40,7 @@ export function usePublishedArticles(params: PublishedArticlesParams = {}) {
     queryKey: ["articles", "published", categorySlug, search, brand],
     queryFn: async () => {
       let query = supabase
-        .from("articles")
+        .from("mkt_articles")
         .select(`
           *,
           categories(id, name, slug),
@@ -57,7 +57,7 @@ export function usePublishedArticles(params: PublishedArticlesParams = {}) {
       // Filter by category
       if (categorySlug) {
         const { data: category } = await supabase
-          .from("categories")
+          .from("mkt_categories")
           .select("id")
           .eq("slug", categorySlug)
           .maybeSingle();
@@ -86,7 +86,7 @@ export function useArticleBySlug(slug: string) {
     queryKey: ["article", slug],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("articles")
+        .from("mkt_articles")
         .select(`
           *,
           categories(id, name, slug),
@@ -107,7 +107,7 @@ export function useAllArticles() {
     queryKey: ["articles", "all"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("articles")
+        .from("mkt_articles")
         .select(`
           *,
           categories(id, name, slug),
@@ -145,7 +145,7 @@ export function useCreateArticle() {
   return useMutation({
     mutationFn: async (article: CreateArticleInput) => {
       const { data, error } = await supabase
-        .from("articles")
+        .from("mkt_articles")
         .insert([article])
         .select()
         .single();
@@ -165,7 +165,7 @@ export function useUpdateArticle() {
   return useMutation({
     mutationFn: async ({ id, ...article }: Partial<Article> & { id: string }) => {
       const { data, error } = await supabase
-        .from("articles")
+        .from("mkt_articles")
         .update(article)
         .eq("id", id)
         .select()
@@ -186,7 +186,7 @@ export function useDeleteArticle() {
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from("articles")
+        .from("mkt_articles")
         .delete()
         .eq("id", id);
       
@@ -202,13 +202,13 @@ export function useIncrementViewCount() {
   return useMutation({
     mutationFn: async (id: string) => {
       const { data: article } = await supabase
-        .from("articles")
+        .from("mkt_articles")
         .select("view_count")
         .eq("id", id)
         .single();
       
       const { error } = await supabase
-        .from("articles")
+        .from("mkt_articles")
         .update({ view_count: (article?.view_count || 0) + 1 })
         .eq("id", id);
       
@@ -222,7 +222,7 @@ export function useRelatedArticles(articleId: string, categoryId: string | null)
     queryKey: ["articles", "related", articleId, categoryId],
     queryFn: async () => {
       let query = supabase
-        .from("articles")
+        .from("mkt_articles")
         .select(`
           *,
           categories(id, name, slug),
@@ -249,7 +249,7 @@ export function useTotalArticlesCount() {
     queryKey: ["articles", "count"],
     queryFn: async () => {
       const { count, error } = await supabase
-        .from("articles")
+        .from("mkt_articles")
         .select("*", { count: "exact", head: true })
         .eq("status", "published");
       

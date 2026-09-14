@@ -27,7 +27,7 @@ async function verifyAdmin(req: Request) {
   }
 
   const adminClient = createClient(supabaseUrl, serviceRoleKey, { db: { schema: 'interagir' } });
-  const { data: isAdmin } = await adminClient.rpc("has_role", {
+  const { data: isAdmin } = await adminClient.rpc("mkt_has_role", {
     _user_id: claimsData.claims.sub,
     _role: "admin",
   });

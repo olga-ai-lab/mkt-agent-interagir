@@ -325,7 +325,7 @@ export function CsvImportModal({ open, onOpenChange }: CsvImportModalProps) {
     let duplicates: string[] = [];
     if (uniqueValid.length > 0) {
       const emails = uniqueValid.map((r) => r.email.toLowerCase());
-      const { data } = await supabase.from("newsletter_subscribers").select("email").in("email", emails);
+      const { data } = await supabase.from("mkt_newsletter_subscribers").select("email").in("email", emails);
       duplicates = (data ?? []).map((d) => d.email);
     }
 
@@ -357,7 +357,7 @@ export function CsvImportModal({ open, onOpenChange }: CsvImportModalProps) {
 
       for (const name of allSegmentNames) {
         if (!existingSegmentNames.includes(name)) {
-          const { error } = await supabase.from("newsletter_segments").insert({
+          const { error } = await supabase.from("mkt_newsletter_segments").insert({
             name,
             color: pickColor(name),
             description: null,

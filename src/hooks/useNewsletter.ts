@@ -18,7 +18,7 @@ export function useNewsletterSubscribers(segmentFilter?: string[]) {
     queryKey: ["newsletter-subscribers", segmentFilter],
     queryFn: async () => {
       let query = supabase
-        .from("newsletter_subscribers")
+        .from("mkt_newsletter_subscribers")
         .select("*")
         .order("subscribed_at", { ascending: false });
       
@@ -38,7 +38,7 @@ export function useSubscribeNewsletter() {
   return useMutation({
     mutationFn: async (email: string) => {
       const { error } = await supabase
-        .from("newsletter_subscribers")
+        .from("mkt_newsletter_subscribers")
         .insert([{ email }]);
       
       if (error) {
@@ -58,7 +58,7 @@ export function useDeleteSubscriber() {
   return useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from("newsletter_subscribers")
+        .from("mkt_newsletter_subscribers")
         .delete()
         .eq("id", id);
       

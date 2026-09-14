@@ -11,7 +11,7 @@ export function usePostTemplates(workspaceId: string | undefined) {
       if (!workspaceId) return [];
       
       const { data, error } = await supabase
-        .from('post_templates')
+        .from('mkt_post_templates')
         .select('*')
         .eq('workspace_id', workspaceId)
         .order('usage_count', { ascending: false });
@@ -37,7 +37,7 @@ export function usePostTemplate(templateId: string | undefined) {
       if (!templateId) return null;
       
       const { data, error } = await supabase
-        .from('post_templates')
+        .from('mkt_post_templates')
         .select('*')
         .eq('id', templateId)
         .single();
@@ -62,7 +62,7 @@ export function useCreateTemplate() {
   return useMutation({
     mutationFn: async (template: Partial<PostTemplate>) => {
       const { data, error } = await supabase
-        .from('post_templates')
+        .from('mkt_post_templates')
         .insert({
           workspace_id: template.workspace_id!,
           name: template.name!,
@@ -99,7 +99,7 @@ export function useUpdateTemplate() {
   return useMutation({
     mutationFn: async ({ id, ...template }: Partial<PostTemplate> & { id: string }) => {
       const { data, error } = await supabase
-        .from('post_templates')
+        .from('mkt_post_templates')
         .update({
           name: template.name,
           description: template.description,
@@ -137,7 +137,7 @@ export function useDeleteTemplate() {
   return useMutation({
     mutationFn: async ({ id, workspaceId }: { id: string; workspaceId: string }) => {
       const { error } = await supabase
-        .from('post_templates')
+        .from('mkt_post_templates')
         .delete()
         .eq('id', id);
       
@@ -163,7 +163,7 @@ export function useUseTemplate() {
     mutationFn: async (templateId: string) => {
       // First get current count
       const { data: template, error: fetchError } = await supabase
-        .from('post_templates')
+        .from('mkt_post_templates')
         .select('usage_count, workspace_id')
         .eq('id', templateId)
         .single();
@@ -171,7 +171,7 @@ export function useUseTemplate() {
       if (fetchError) throw fetchError;
       
       const { error } = await supabase
-        .from('post_templates')
+        .from('mkt_post_templates')
         .update({ usage_count: (template.usage_count || 0) + 1 })
         .eq('id', templateId);
       
