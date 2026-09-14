@@ -100,7 +100,7 @@ serve(async (req) => {
       
       // Upload to storage
       const { error: uploadError } = await supabase.storage
-        .from("mkt-post-media")
+        .from("interagir-post-media")
         .upload(filePath, imageBuffer, {
           contentType: "image/png",
           upsert: false
@@ -116,7 +116,7 @@ serve(async (req) => {
       
       // Get public URL
       const { data: publicUrlData } = supabase.storage
-        .from("mkt-post-media")
+        .from("interagir-post-media")
         .getPublicUrl(filePath);
       
       console.log("Image uploaded successfully:", publicUrlData.publicUrl);

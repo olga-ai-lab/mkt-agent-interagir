@@ -76,7 +76,7 @@ export default function PostReview() {
       await api.updatePost(id, { channels });
 
       // Chamar edge function para publicar nos canais
-      const { data, error } = await supabase.functions.invoke('mkt-trigger-publish', {
+      const { data, error } = await supabase.functions.invoke('interagir-trigger-publish', {
         body: {
           post_id: id,
           channels: channels,

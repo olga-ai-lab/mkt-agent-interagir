@@ -71,13 +71,13 @@ export function FileToPostUploader({ onContentExtracted, onProcessingStarted, di
       const path = `documents/${crypto.randomUUID()}.${ext}`;
 
       const { error } = await supabase.storage
-        .from("mkt-post-media")
+        .from("interagir-post-media")
         .upload(path, file, { contentType: file.type });
 
       if (error) { toast.error(`Erro ao enviar ${file.name}`); continue; }
 
       const { data: urlData } = await supabase.storage
-        .from("mkt-post-media")
+        .from("interagir-post-media")
         .createSignedUrl(path, 3600);
 
       newFiles.push({ file, path, file_type: fileType, signed_url: urlData?.signedUrl });
@@ -90,7 +90,7 @@ export function FileToPostUploader({ onContentExtracted, onProcessingStarted, di
 
   const removeFile = async (index: number) => {
     const f = files[index];
-    await supabase.storage.from("mkt-post-media").remove([f.path]);
+    await supabase.storage.from("interagir-post-media").remove([f.path]);
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -141,7 +141,7 @@ export function FileToPostUploader({ onContentExtracted, onProcessingStarted, di
       // nunca chegava lá antes; do servidor (edge function) CORS não se
       // aplica. Erro aqui é reportado no banner de status em vez de sumir
       // num catch silencioso.
-      const { error: triggerError } = await supabase.functions.invoke("mkt-trigger-file-to-post", {
+      const { error: triggerError } = await supabase.functions.invoke("interagir-trigger-file-to-post", {
         body: payload,
       });
       if (triggerError) {

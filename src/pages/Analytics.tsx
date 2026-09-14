@@ -87,7 +87,7 @@ export default function Analytics() {
     setSbLoading(true);
     setSbError(null);
     try {
-      const { data, error } = await supabase.functions.invoke("mkt-socialbu-overview", {
+      const { data, error } = await supabase.functions.invoke("interagir-socialbu-overview", {
         body: {
           days_back: parseInt(period, 10),
           network: channelFilter !== "all" ? channelFilter : undefined,
@@ -108,7 +108,7 @@ export default function Analytics() {
     if (!currentWorkspace || refreshing) return;
     setRefreshing(true);
     try {
-      const { data, error } = await supabase.functions.invoke("mkt-fetch-social-insights", {
+      const { data, error } = await supabase.functions.invoke("interagir-fetch-social-insights", {
         body: { workspace_id: currentWorkspace.id, days_back: parseInt(period, 10) },
       });
       if (error) throw error;

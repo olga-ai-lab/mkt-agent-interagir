@@ -643,7 +643,7 @@ export async function requestChanges(
 
   // Auto-trigger rejection analysis to update AI prompts
   try {
-    await supabase.functions.invoke('mkt-analyze-rejections', {
+    await supabase.functions.invoke('interagir-analyze-rejections', {
       body: { workspace_id: workspaceId }
     });
     console.log('Auto-analysis triggered for rejections');

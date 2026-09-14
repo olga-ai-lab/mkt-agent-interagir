@@ -730,7 +730,7 @@ serve(async (req) => {
         const isSocialBuManaged = connection?.access_token === "socialbu-managed";
 
         if (isSocialBuManaged) {
-          const { data: publishResult } = await supabase.functions.invoke("mkt-social-publish", {
+          const { data: publishResult } = await supabase.functions.invoke("interagir-social-publish", {
             body: {
               post_id: post_id,
               workspace_id: post.workspace_id,

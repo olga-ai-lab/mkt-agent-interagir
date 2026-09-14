@@ -13,7 +13,7 @@ export interface GalleryFile {
 
 const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "avif"];
 const videoExtensions = ["mp4", "mov", "avi", "webm", "mkv"];
-const MEDIA_BUCKET = "mkt-post-media";
+const MEDIA_BUCKET = "interagir-post-media";
 
 function getFileType(url: string): GalleryFile["type"] {
   const ext = url.split(/[?#]/)[0].split(".").pop()?.toLowerCase() || "";
@@ -134,9 +134,9 @@ export function useGalleryMedia(
   const deleteMutation = useMutation({
     mutationFn: async (path: string) => {
       // If it's a full URL from storage bucket, extract the storage path
-      if (path.includes("/mkt-post-media/") || path.includes("/post-media/")) {
-        const storagePath = path.includes("/mkt-post-media/")
-          ? path.split("/mkt-post-media/").pop()
+      if (path.includes("/interagir-post-media/") || path.includes("/post-media/")) {
+        const storagePath = path.includes("/interagir-post-media/")
+          ? path.split("/interagir-post-media/").pop()
           : path.split("/post-media/").pop();
         if (storagePath) {
           const { error } = await supabase.storage

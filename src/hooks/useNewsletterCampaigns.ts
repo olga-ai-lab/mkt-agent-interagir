@@ -140,7 +140,7 @@ export function useSendTestEmail() {
       segments: string[];
       test_email: string;
     }) => {
-      const { data, error } = await supabase.functions.invoke("mkt-send-newsletter", {
+      const { data, error } = await supabase.functions.invoke("interagir-send-newsletter", {
         body: {
           campaign_id: params.campaign_id,
           subject: params.subject,
@@ -165,7 +165,7 @@ export function useSendCampaign() {
       content: string;
       segments: string[];
     }) => {
-      const { data, error } = await supabase.functions.invoke("mkt-send-newsletter", {
+      const { data, error } = await supabase.functions.invoke("interagir-send-newsletter", {
         body: {
           campaign_id: campaign.id,
           subject: campaign.subject,

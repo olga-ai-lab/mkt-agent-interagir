@@ -184,7 +184,7 @@ Seja específico e prático nas análises.`;
     // Trigger playbook update after saving insight
     try {
       const playbookResponse = await fetch(
-        `${Deno.env.get("SUPABASE_URL")}/functions/v1/mkt-update-trend-playbook`,
+        `${Deno.env.get("SUPABASE_URL")}/functions/v1/interagir-update-trend-playbook`,
         {
           method: "POST",
           headers: {

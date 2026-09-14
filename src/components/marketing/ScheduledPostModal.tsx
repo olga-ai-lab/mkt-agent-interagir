@@ -93,7 +93,7 @@ export function ScheduledPostModal({ post, open, onClose, onPostUpdated }: Sched
     setLoading('publish');
     try {
       // Call trigger-publish without scheduled_at to publish immediately
-      const { error } = await supabase.functions.invoke('mkt-trigger-publish', {
+      const { error } = await supabase.functions.invoke('interagir-trigger-publish', {
         body: {
           post_id: post.id,
           channels: post.channels,

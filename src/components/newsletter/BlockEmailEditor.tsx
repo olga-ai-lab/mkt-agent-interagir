@@ -61,7 +61,7 @@ const ALIGNS: { value: BlockAlign; label: string }[] = [
   { value: "right", label: "Direita" },
 ];
 
-const MEDIA_BUCKET = "mkt-post-media";
+const MEDIA_BUCKET = "interagir-post-media";
 
 export function BlockEmailEditor({ blocks, onChange, headerTitle = "NEWSLETTER", disabled = false, settings, onSettingsChange }: BlockEmailEditorProps) {
   const [selectedId, setSelectedId] = useState<string | null>(null);

@@ -378,7 +378,7 @@ const handleGenerateImage = async (feedback?: string) => {
   
   setGeneratingImage(true);
   try {
-    const response = await supabase.functions.invoke("mkt-generate-image-n8n", {
+    const response = await supabase.functions.invoke("interagir-generate-image-n8n", {
       body: { 
         post_id: id, 
         title, 

@@ -216,7 +216,7 @@ export function useAnalyzePost() {
 
   return useMutation({
     mutationFn: async ({ postId, workspaceId }: { postId: string; workspaceId: string }) => {
-      const { data, error } = await supabase.functions.invoke('mkt-ai-insights-analyze', {
+      const { data, error } = await supabase.functions.invoke('interagir-ai-insights-analyze', {
         body: { post_id: postId, workspace_id: workspaceId },
       });
 
@@ -236,7 +236,7 @@ export function useGenerateSuggestions() {
 
   return useMutation({
     mutationFn: async ({ workspaceId }: { workspaceId: string }) => {
-      const { data, error } = await supabase.functions.invoke('mkt-ai-generate-suggestions', {
+      const { data, error } = await supabase.functions.invoke('interagir-ai-generate-suggestions', {
         body: { workspace_id: workspaceId },
       });
 
@@ -263,7 +263,7 @@ export function useAnalyzeAllPosts() {
         const batch = postIds.slice(i, i + batchSize);
         await Promise.all(
           batch.map(postId =>
-            supabase.functions.invoke('mkt-ai-insights-analyze', {
+            supabase.functions.invoke('interagir-ai-insights-analyze', {
               body: { post_id: postId, workspace_id: workspaceId },
             })
           )
@@ -287,7 +287,7 @@ export function useGeneratePromptMaster() {
 
   return useMutation({
     mutationFn: async ({ workspaceId }: { workspaceId: string }) => {
-      const { data, error } = await supabase.functions.invoke('mkt-generate-prompt-master', {
+      const { data, error } = await supabase.functions.invoke('interagir-generate-prompt-master', {
         body: { workspace_id: workspaceId },
       });
 

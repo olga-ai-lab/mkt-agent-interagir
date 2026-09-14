@@ -39,7 +39,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         provider: provider,
-        postback_url: `${supabaseUrl}/functions/v1/mkt-socialbu-postback?workspace_id=${workspace_id}`,
+        postback_url: `${supabaseUrl}/functions/v1/interagir-socialbu-postback?workspace_id=${workspace_id}`,
       }),
     });
 

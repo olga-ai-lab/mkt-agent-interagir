@@ -85,7 +85,7 @@ async function publishViaSocialBu(
     accounts: [parseInt(accountId, 10)],
     publish_at: new Date().toISOString().replace("T", " ").substring(0, 19),
     content,
-    postback_url: `${supabaseUrl}/functions/v1/mkt-socialbu-postback?workspace_id=${encodeURIComponent(workspaceId)}&provider=${encodeURIComponent(provider)}`,
+    postback_url: `${supabaseUrl}/functions/v1/interagir-socialbu-postback?workspace_id=${encodeURIComponent(workspaceId)}&provider=${encodeURIComponent(provider)}`,
   };
   if (existingAttachments.length > 0) {
     sbPostBody.existing_attachments = existingAttachments.map((t) => ({ upload_token: t }));

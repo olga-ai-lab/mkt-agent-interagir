@@ -17,7 +17,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const targetUrl = `${supabaseUrl.replace(/\/$/, "")}/functions/v1/trigger-agenda-pauta`;
+    const targetUrl = `${supabaseUrl.replace(/\/$/, "")}/functions/v1/interagir-trigger-agenda-pauta-v1`;
     const body = await req.text();
     const headers = new Headers();
     headers.set("Content-Type", req.headers.get("Content-Type") || "application/json");

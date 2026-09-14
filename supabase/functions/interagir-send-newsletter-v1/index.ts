@@ -127,7 +127,7 @@ serve(async (req: Request) => {
     }));
 
     // Prepare callback URL for n8n to report results
-    const callbackUrl = `${supabaseUrl}/functions/v1/mkt-newsletter-callback`;
+    const callbackUrl = `${supabaseUrl}/functions/v1/interagir-newsletter-callback`;
 
     // Send to n8n webhook
     const payload = {

@@ -19,7 +19,7 @@ interface MediaUploaderProps {
   postId?: string;
 }
 
-const BUCKET_NAME = "mkt-post-media";
+const BUCKET_NAME = "interagir-post-media";
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const ALLOWED_TYPES = [
   "image/jpeg",
@@ -176,7 +176,7 @@ export function MediaUploader({
 
   const removeMedia = async (urlToRemove: string) => {
     const url = new URL(urlToRemove);
-    const pathMatch = url.pathname.match(/\/(?:mkt-post-media|post-media)\/(.+)$/);
+    const pathMatch = url.pathname.match(/\/(?:interagir-post-media|post-media)\/(.+)$/);
 
     if (pathMatch) {
       const filePath = decodeURIComponent(pathMatch[1]);

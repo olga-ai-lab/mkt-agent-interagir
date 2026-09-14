@@ -38,7 +38,7 @@ export function useSocialConnections(workspaceId: string | undefined) {
     setConnecting(provider);
 
     try {
-      const { data, error } = await supabase.functions.invoke('mkt-oauth-init', {
+      const { data, error } = await supabase.functions.invoke('interagir-oauth-init', {
         body: { provider, workspace_id: workspaceId },
       });
 

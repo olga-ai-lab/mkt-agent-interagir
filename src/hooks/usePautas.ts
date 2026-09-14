@@ -176,7 +176,7 @@ export function usePautas() {
   };
 
   const triggerPautaGeneration = async (pautaId: number) => {
-    const { data, error: invokeError } = await supabase.functions.invoke("mkt-trigger-agenda-pauta", {
+    const { data, error: invokeError } = await supabase.functions.invoke("interagir-trigger-agenda-pauta", {
       body: { pauta_id: pautaId },
     });
 

@@ -52,7 +52,7 @@ import type {
   RegulatoryBlock,
 } from "@/types/marketing";
 
-const MEDIA_BUCKET = "mkt-post-media";
+const MEDIA_BUCKET = "interagir-post-media";
 const PARTNER_ALLOWED_TYPES = ["image/png", "image/webp"];
 
 type SelectedLayer =

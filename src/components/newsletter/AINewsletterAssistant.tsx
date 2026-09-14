@@ -32,7 +32,7 @@ export function AINewsletterAssistant({
   const generateSuggestion = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("mkt-ai-newsletter-assist", {
+      const { data, error } = await supabase.functions.invoke("interagir-ai-newsletter-assist", {
         body: {
           campaign_type: campaignType,
           segments: selectedSegments,

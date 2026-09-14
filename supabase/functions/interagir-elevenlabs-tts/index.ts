@@ -6,7 +6,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const AUDIO_BUCKET_CANDIDATES = ['mkt-tts-audio', 'tts-audio'];
+const AUDIO_BUCKET_CANDIDATES = ['interagir-tts-audio', 'tts-audio'];
 
 // Strip HTML tags and get plain text
 function stripHtml(html: string): string {

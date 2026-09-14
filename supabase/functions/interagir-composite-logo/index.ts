@@ -73,8 +73,8 @@ function normalizeImageId(
   }
 
   if (input.endsWith("_raw.png")) {
-    const rawPath = input.startsWith("mkt-article-images/")
-      ? input.replace(/^mkt-article-images\//, "")
+    const rawPath = input.startsWith("interagir-article-images/")
+      ? input.replace(/^interagir-article-images\//, "")
       : input;
     const finalPath = rawPath.replace(/_raw\.png$/i, ".png");
     const fileName = finalPath.split("/").pop() ?? finalPath;
@@ -83,8 +83,8 @@ function normalizeImageId(
   }
 
   if (input.endsWith(".png")) {
-    const rawPath = input.startsWith("mkt-article-images/")
-      ? input.replace(/^mkt-article-images\//, "")
+    const rawPath = input.startsWith("interagir-article-images/")
+      ? input.replace(/^interagir-article-images\//, "")
       : input;
     const fileName = rawPath.split("/").pop() ?? rawPath;
     const imageId = fileName.replace(/\.png$/i, "");
@@ -154,7 +154,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
   try {
     console.log(`[composite-logo] Baixando imagem: ${imageInfo.rawPath}`);
     const { data: rawBlob, error: rawErr } = await supabase.storage
-      .from("mkt-article-images")
+      .from("interagir-article-images")
       .download(imageInfo.rawPath, {
         transform: {
           width: BASE_MAX_DIM,
@@ -271,7 +271,7 @@ Deno.serve(async (req: Request): Promise<Response> => {
 
     console.log(`[composite-logo] Upload final: ${imageInfo.finalPath}`);
     const { error: uploadErr } = await supabase.storage
-      .from("mkt-article-images")
+      .from("interagir-article-images")
       .upload(imageInfo.finalPath, finalBlob, {
         contentType: "image/png",
         upsert: true,
@@ -286,9 +286,9 @@ Deno.serve(async (req: Request): Promise<Response> => {
     // a logo). NÃO remover o rawPath.
 
     const publicUrl =
-      `${supabaseUrl}/storage/v1/object/public/mkt-article-images/${imageInfo.finalPath}`;
+      `${supabaseUrl}/storage/v1/object/public/interagir-article-images/${imageInfo.finalPath}`;
     const basePublicUrl =
-      `${supabaseUrl}/storage/v1/object/public/mkt-article-images/${imageInfo.rawPath}`;
+      `${supabaseUrl}/storage/v1/object/public/interagir-article-images/${imageInfo.rawPath}`;
     return json({
       id: imageInfo.imageId,
       public_url: publicUrl,

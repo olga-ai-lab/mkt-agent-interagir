@@ -11,7 +11,7 @@ import type {
   RegulatoryBlock,
 } from "@/types/marketing";
 
-const MEDIA_BUCKET = "mkt-post-media";
+const MEDIA_BUCKET = "interagir-post-media";
 
 export const SAFE_AREA_BOTTOM = 0.16;
 export const DEFAULT_MAIN_LOGO_ID = "brand:primary";

@@ -61,7 +61,7 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey, { db: { schema: 'interagir' } });
 
     // Build callback URL
-    const callbackUrl = `${supabaseUrl}/functions/v1/mkt-oauth-callback`;
+    const callbackUrl = `${supabaseUrl}/functions/v1/interagir-oauth-callback`;
 
     let connectionData: {
       account_id: string;

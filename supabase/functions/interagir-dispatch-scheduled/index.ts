@@ -46,7 +46,7 @@ serve(async (req: Request) => {
         .eq("status", "scheduled"); // guard against race condition
 
       try {
-        const resp = await fetch(`${supabaseUrl}/functions/v1/mkt-send-newsletter`, {
+        const resp = await fetch(`${supabaseUrl}/functions/v1/interagir-send-newsletter`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
