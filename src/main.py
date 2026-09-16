@@ -147,22 +147,32 @@ def _queue_rss(background: BackgroundTasks, *, marca: str, max_items: int) -> li
 
 
 def _queue_pauta(background: BackgroundTasks, pauta: dict) -> str:
-    """Rankeia RSS para a pauta, escolhe o melhor artigo novo e enfileira 1 post."""
-    channels = normalize_channels(pauta.get("plataforma"))
-    entries = [e for e in fetch_entries(RSS_FEED_PAUTA, limit=RSS_CANDIDATE_POOL) if is_valid_entry(e)]
-    ranked = pauta_ranker.rank(
-        pauta_titulo=pauta.get("titulo", ""),
-        pauta_briefing=pauta.get("briefing", ""),
-        pauta_link=pauta.get("link_referencia", "") or "",
-        artigos=entries,
-    )
-    angulo = ranked.get("angulo_editorial", "")
+    """Rankeia RSS para a pauta, escolhe o melhor artigo novo e enfileira 1 post.
 
+    O enriquecimento por RSS (busca do feed + ranking por LLM) é best-effort:
+    se o feed estiver fora do ar ou o ranker falhar, seguimos só com
+    título/briefing da pauta em vez de derrubar a request inteira com 500 —
+    isso deixava a pauta presa em "pendente" pra sempre, porque a falha
+    acontecia ANTES de pautas.mark_processing.
+    """
+    channels = normalize_channels(pauta.get("plataforma"))
     chosen = None
-    for i in ranked.get("indices_selecionados", []):
-        if 0 <= i < len(entries) and not blog_content.link_exists(entries[i]["link"]):
-            chosen = entries[i]
-            break
+    angulo = ""
+    try:
+        entries = [e for e in fetch_entries(RSS_FEED_PAUTA, limit=RSS_CANDIDATE_POOL) if is_valid_entry(e)]
+        ranked = pauta_ranker.rank(
+            pauta_titulo=pauta.get("titulo", ""),
+            pauta_briefing=pauta.get("briefing", ""),
+            pauta_link=pauta.get("link_referencia", "") or "",
+            artigos=entries,
+        )
+        angulo = ranked.get("angulo_editorial", "")
+        for i in ranked.get("indices_selecionados", []):
+            if 0 <= i < len(entries) and not blog_content.link_exists(entries[i]["link"]):
+                chosen = entries[i]
+                break
+    except Exception:
+        logger.exception("RSS enrichment failed for pauta %s — seguindo sem artigo de referência", pauta.get("id"))
 
     pautas.mark_processing(int(pauta["id"]))
     generation_id = str(uuid.uuid4())
