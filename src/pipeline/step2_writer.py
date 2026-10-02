@@ -16,10 +16,11 @@ from ..repositories import analytics, skills
 logger = logging.getLogger(__name__)
 
 _SYSTEM_HEADER = (
-    "Você é um redator sênior de conteúdo para o mercado de seguros brasileiro. "
-    "A decisão de marca JÁ FOI TOMADA pelo Curador — use exatamente a marca informada, "
-    "com o tom da skill correspondente. Escreva para o corretor de seguros como público "
-    "central. Use as skills abaixo como base de tom, persona, mercado e dados."
+    "Você é o redator sênior da Livo Interagir, o ecossistema que forma, recicla e "
+    "prepara especialistas em Seguros de Pessoas. Escreva para o Corretor de Seguros "
+    "como parceiro, não como cliente de um fornecedor. O Guia de Marca (primeira skill "
+    "abaixo) é a regra principal de tom, vocabulário e mensagem: em qualquer conflito "
+    "com outra skill, o Guia prevalece."
 )
 
 _FORMAT_RULES_BLOG = """FORMATO OBRIGATÓRIO — BLOG:
@@ -36,24 +37,27 @@ _FORMAT_RULES_INSTAGRAM = """FORMATO OBRIGATÓRIO — INSTAGRAM:
 - 400 a 700 caracteres. ZERO Markdown (exceto as hashtags finais). ZERO estrutura de blog
   (sem ##, sem múltiplas seções com subtítulo).
 - Primeira linha (gancho) em CAIXA ALTA, até ~125 caracteres.
-- Emoji — limite rígido: NO MÁXIMO 2 em todo o texto. Um junto ao gancho na primeira
-  linha, e opcionalmente mais um no CTA final. Os parágrafos do meio (desenvolvimento)
-  NÃO levam emoji nenhum.
+- Emoji FUNCIONAL, como no Guia de Marca: só para guiar a leitura, nunca decorativo.
+  🚀 na abertura, 📊 junto ao dado/prova, ✅ em cada item de uma lista de benefícios
+  (se houver lista), 👉 na chamada final. Nada de emoji fora dessas funções.
 - Estrutura: gancho em caixa alta → fato+gap → quebra de linha → conteúdo direto →
   CTA com pergunta sugestiva ou chamada direta.
-- CTA: use algo direto como "Saiba mais", "Fale com a gente" ou "Fale com um corretor".
+- CTA: use os CTAs do Guia de Marca ("Conheça a Livo Interagir", "Seja Corretor",
+  "Agendar Consultoria Gratuita com Nossos Parceiros") ou algo direto como "Fale com a gente".
   NUNCA peça para comentar uma palavra-código (ex.: "Comenta 'FROTA'").
-- 8-15 hashtags ao final."""
+- Hashtags ao final: SEMPRE as padrão #LivoInteragir #SegurodeVida #AssessoriaEspecializada
+  #Seguros, mais até 6 ligadas ao tema."""
 
 _FORMAT_RULES_FACEBOOK = """FORMATO OBRIGATÓRIO — FACEBOOK:
 - 400 a 700 caracteres. ZERO Markdown. ZERO estrutura de blog (sem ##, sem múltiplas
   seções com subtítulo).
 - Primeira linha (gancho) em CAIXA ALTA, até ~125 caracteres.
-- Emoji — limite rígido: NO MÁXIMO 2 em todo o texto. Um junto ao gancho na primeira
-  linha, e opcionalmente mais um no CTA final. Os parágrafos do meio (desenvolvimento)
-  NÃO levam emoji nenhum.
+- Emoji FUNCIONAL, como no Guia de Marca: só para guiar a leitura, nunca decorativo.
+  🚀 na abertura, 📊 junto ao dado/prova, ✅ em cada item de uma lista de benefícios
+  (se houver lista), 👉 na chamada final. Nada de emoji fora dessas funções.
 - Tom conversacional e próximo da comunidade, incentivando interação.
-- CTA: use algo direto como "Saiba mais", "Fale com a gente" ou "Fale com um corretor".
+- CTA: use os CTAs do Guia de Marca ("Conheça a Livo Interagir", "Seja Corretor",
+  "Agendar Consultoria Gratuita com Nossos Parceiros") ou algo direto como "Fale com a gente".
   NUNCA peça para comentar uma palavra-código (ex.: "Comenta 'FROTA'")."""
 
 _FORMAT_RULES_BY_PLATAFORMA: dict[str, str] = {
@@ -71,6 +75,9 @@ _QUALITY_RULES = """REGRAS DE QUALIDADE:
    dado. 7. Mencione a marca no máximo 1-2 vezes, de forma natural. 8. Insira exemplos
    de forma fluida (nunca "Exemplo prático:"). 9. Priorize insights ACIONÁVEIS.
 10. Inclua hashtags/tags relevantes ao final conforme a vertical.
+11. Propósito antes do produto: abra pela proteção de Pessoas, Famílias e Empresas; o
+    Seguro de Vida vem depois. Use o glossário do Guia de Marca (Corretor de Seguros,
+    Ecossistema, Assessoria em Seguros de Pessoas) e os nomes oficiais das coberturas.
 
 SAÍDA:
 Entregue o texto limpo do conteúdo. Primeira linha = título; segunda linha = subtítulo/
@@ -111,7 +118,7 @@ def write(
     plataforma_efetiva = (plataforma or "blog").strip().lower()
     format_rules = _format_rules_for(plataforma_efetiva)
 
-    skill_ids = [skills.tom_skill_id(marca), *skills.REDATOR_SKILLS]
+    skill_ids = [skills.GUIA_MARCA, skills.tom_skill_id(marca), *skills.REDATOR_SKILLS]
     # A regra de formato entra também no SYSTEM (não só no fim do user, que pode ficar
     # longo com o artigo inteiro) — reforça que o formato da plataforma tem prioridade
     # sobre qualquer estrutura "padrão" que as skills de tom sugiram.

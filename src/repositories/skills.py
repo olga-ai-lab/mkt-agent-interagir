@@ -14,9 +14,15 @@ logger = logging.getLogger(__name__)
 
 VALID_AGENTS = {"curador", "redator", "revisor", "designer"}
 
+# Guia de Marca, Tom de Voz e Jargões da Livo Interagir: o centro do desenvolvimento
+# de conteúdo. Vem primeiro no prompt de TODOS os agentes, para que as skills de cada
+# papel sejam lidas como desdobramento dele (e não o contrário).
+GUIA_MARCA = "guia_marca_livo_interagir"
+
 # Skills que cada agente consome, na ordem em que devem aparecer no prompt.
 # Skills marca-específicas (tom/visual) são resolvidas em runtime por get_for_agent.
 CURADOR_SKILLS = [
+    GUIA_MARCA,
     "curador_matriz_selecao",
     "curador_detector_fontes",
     "curador_pilares_conteudo",
@@ -28,6 +34,7 @@ REDATOR_SKILLS = [
     "redator_performance_historica",
 ]
 REVISOR_SKILLS = [
+    GUIA_MARCA,
     "revisor_brand_compliance",
     "revisor_anti_plagio",
 ]
