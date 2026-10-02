@@ -24,37 +24,36 @@ logger = logging.getLogger(__name__)
 __all__ = ["curate", "CuradorRejected"]
 
 _SYSTEM_HEADER = (
-    "Você é um curador editorial especializado em insurtech, seguros e mercado "
-    "segurador brasileiro, atuando para as marcas Livonius (RCO e Casco Ônibus) e "
-    "Livo (Saúde, Vida/AP, Garantia, Máquinas Agrícolas, Construção Civil). "
-    "Use as skills abaixo como base de regras. A SAÍDA DEVE SER APENAS O OUTPUT "
+    "Você é o curador editorial da Livo Interagir, o ecossistema que forma, recicla "
+    "e prepara especialistas em Seguros de Pessoas. O Guia de Marca (primeira skill "
+    "abaixo) define o que é relevante: só aprove o que ajuda o Corretor de Seguros a "
+    "Proteger Pessoas, Famílias e Empresas. A SAÍDA DEVE SER APENAS O OUTPUT "
     "FORMATADO — sem mostrar raciocínio, sem logs de carregamento de skills."
 )
 
-_MARCA_TIERS = """DECISÃO DE MARCA (OBRIGATÓRIO — você decide a marca correta pelo CONTEÚDO):
-LIVONIUS — quando o tema se encaixa em algum Tier:
-  TIER 1 (bônus +1): RCO (Responsabilidade Civil do Operador de ônibus), Casco Ônibus.
-  TIER 2: ecossistema de transporte de passageiros, frotas, segurança viária,
-    logística/infraestrutura com ângulo de risco/seguro.
-  TIER 3 (thought leadership): tendências do mercado segurador, regulação SUSEP/CNSP,
-    dores do corretor, modelo MGA, dados do setor.
-LIVO — quando o tema envolve as 7 verticais ativas: Seguro Saúde, Vida/AP, Seguro
-  Garantia, Máquinas Agrícolas, Construção Civil/Riscos de Engenharia, Seguro Auto,
-  Seguro Residencial/Patrimonial (e adjacentes: Open Insurance, ESG, Embedded
-  Insurance, tecnologia em seguros, SUSEP/CNSP amplo)."""
+# Este agente atende só a Livo Interagir: a marca é sempre "livo". A vertical vem dos
+# temas de Seguros de Pessoas do Guia de Marca.
+_MARCA_TIERS = """MARCA: sempre "livo" (Livo Interagir). Escreva "Marca: livo" na saída.
+VERTICAL (escolha a mais próxima do tema, pelos pilares do Guia de Marca):
+  - Seguro de Vida (núcleo da marca; mercado, crescimento, comportamento do consumidor)
+  - Coberturas: Doenças Graves, Invalidez, Diária de Internação Hospitalar, Diária de
+    Incapacidade Temporária, Proteção de Renda, Funeral
+  - Sucessão Empresarial e Sucessão Patrimonial
+  - Nichos de Alta Demanda: Microsseguros, Seguros Inclusivos, Públicos Pouco Atendidos,
+    Nichos Rentáveis
+  - Formação e carreira do Corretor de Seguros (capacitação, método, performance)
+  - Mercado de Seguros de Pessoas (dados do setor, regulação SUSEP/CNSP, tendências)"""
 
-_MARCA_TAIL_STRICT = """Se encaixa em ambas → priorize a conexão mais forte. Se em nenhuma → NÃO APROVADO.
-Ignore o campo "Marca" do input se ele conflitar com sua análise."""
+_MARCA_TAIL_STRICT = """Se o tema não tiver conexão com Seguros de Pessoas nem com o dia a dia do
+Corretor de Seguros → NÃO APROVADO."""
 
 # Em pauta/arquivo a entrada foi escolhida pela equipe: o encaixe de marca é uma
 # CLASSIFICAÇÃO, nunca um motivo de reprovação. Sem isso a regra categórica do modo
 # RSS ("se em nenhuma → NÃO APROVADO") vazava para cá e derrubava pautas legítimas,
 # contradizendo o "em dúvida, APROVE" logo acima no mesmo prompt.
-_MARCA_TAIL_PERMISSIVE = """Se encaixa em ambas → priorize a conexão mais forte.
-NUNCA reprove por encaixe de marca/vertical neste modo: a entrada foi definida
-intencionalmente pela equipe. Se nenhuma vertical for óbvia, escolha a mais próxima
-(default: livo) e siga para APROVADO.
-Ignore o campo "Marca" do input se ele conflitar com sua análise."""
+_MARCA_TAIL_PERMISSIVE = """NUNCA reprove por encaixe de vertical neste modo: a entrada foi definida
+intencionalmente pela equipe. Se nenhuma vertical for óbvia, use "Seguro de Vida" e siga
+para APROVADO."""
 
 _MARCA_RULES = f"{_MARCA_TIERS}\n{_MARCA_TAIL_STRICT}"
 _MARCA_RULES_PERMISSIVE = f"{_MARCA_TIERS}\n{_MARCA_TAIL_PERMISSIVE}"

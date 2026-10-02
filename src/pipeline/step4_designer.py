@@ -48,8 +48,7 @@ def design(*, marca: str, redator_output: str, feedback: str = "") -> dict[str, 
     `feedback` é opcional — usado no fluxo de regeneração de imagem (botão do
     front), quando o lead pede um ajuste específico na composição visual.
     """
-    skill = skills.get_by_id(skills.designer_skill_id(marca))
-    system = (skill["system_prompt"] if skill else "") + _OUTPUT_CONTRACT
+    system = skills.build_prompt([skills.GUIA_MARCA, skills.designer_skill_id(marca)]) + _OUTPUT_CONTRACT
 
     feedback_block = f"\n\nUSER FEEDBACK FOR THIS REVISION (address it directly):\n{feedback.strip()}" if feedback.strip() else ""
 
